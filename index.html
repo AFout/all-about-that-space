@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>All About That Space Property Services</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 500px;
+    margin: auto;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.logo img {
+    width: 100%;
+    max-width: 350px;
+    display: block;
+    margin: auto;
+}
+
+.info-box {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.info-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.info-box input,
+.info-box select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.rooms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 450px;
+}
+
+.room {
+    background: #1697C9;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 25px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    min-height: 110px;
+}
+
+.room:hover {
+    background: #117ea9;
+}
+
+.add-room {
+    background: #F4B400;
+    grid-column: span 2;
+}
+
+.report-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.copy-btn {
+    background: #0a8a4b;
+}
+
+.copy-btn:hover {
+    background: #08723e;
+}
+
+.reset-btn {
+    background: #c62828;
+}
+
+.reset-btn:hover {
+    background: #a11f1f;
+}
+.main-content {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    
+ 
+}
+
+.completed-panel {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    width: 250px;
+    min-height: 330px;
+    margin-left: 20px;
+
+    border: 3px solid #1697C9;
+}
+
+.completed-panel h3 {
+    margin-top: 0;
+    color: #1697C9;
+}
+
+#completedRoomsList {
+    line-height: 1.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="logo.png" alt="All About That Space Property Services Logo">
+</div>
+
+<div id="clock"
+style="
+    text-align:center;
+    font-size:24px;
+    font-weight:bold;
+    color:#1697C9;
+    margin-bottom:20px;
+">
+</div>
+
+<div class="info-box">
+<label for="propertyAddress">
+
+Property Address
+
+</label>
+
+<input
+type="text"
+id="propertyAddress"
+placeholder="Enter Property Address">
+<label for="reportDate">Date</label>
+
+<input
+type="date"
+id="reportDate">
+
+<label for="author">Author</label>
+
+<select id="author">
+
+<option value="">Select Author</option>
+<option value="AF">AF</option>
+<option value="FF">FF</option>
+
+</select>
+
+</div>
+
+<div class="main-content">
+
+<div class="main-content">
+
+<div class="rooms">
+
+<!-- KITCHEN BUTTON -->
+
+<button class="room"
+onclick="location.href='kitchen.html'">
+
+<span id="KitchenStatus"></span>
+🍳 Kitchen
+
+</button>
+
+<!-- BATHROOM BUTTON -->
+
+<button class="room"
+onclick="location.href='bathroom.html'">
+
+<span id="BathroomStatus"></span>
+🛁 Bathroom
+
+</button>
+
+<!-- BEDROOM BUTTON -->
+
+<button class="room"
+onclick="location.href='bedroom.html'">
+
+<span id="BedroomStatus"></span>
+
+🛏️ Bedroom
+</button>
+
+<!-- HALLWAY BUTTON -->
+
+<button class="room"
+onclick="location.href='hallway.html'">
+
+<span id="HallwayStatus"></span>
+🚪 Hallway
+</button>
+
+<!-- LIVING ROOM BUTTON -->
+
+<button class="room"
+onclick="location.href='livingroom.html'">
+
+<span id="LivingRoomStatus"></span>
+🛋️ Living Room
+</button>
+
+<!-- DINING ROOM BUTTON -->
+
+<button class="room"
+onclick="location.href='diningroom.html'">
+
+<span id="DiningRoomStatus"></span>
+🍽️ Dining Room
+
+</button>
+<button
+class="room add-room"
+onclick="location.href='customroom.html'">
+
+➕ Add Custom Room
+
+</button>
+</div>
+</div>
+
+<div class="completed-panel">
+
+    <h3>Completed Rooms</h3>
+
+    <div id="completedRoomsList">
+
+        None Yet
+
+    </div>
+
+</div>
+
+</div>
+<button
+class="report-btn copy-btn"
+onclick="copyEntireReport()">
+
+📋 Copy Entire Cleaning Report
+
+</button>
+
+<button
+class="report-btn reset-btn"
+onclick="resetAllData()">
+
+🔄 Reset App
+
+</button>
+
+</div>
+<script>
+function updateRoomStatus() {
+
+	let completedRooms = [];
+
+    if (
+        localStorage.getItem(
+            "KitchenComplete"
+        ) === "true"
+    ) {
+
+
+
+        document.getElementById(
+            "KitchenStatus"
+        ).innerHTML = "✅ ";
+	
+	completedRooms.push(
+		"Kitchen"
+	);
+
+    }
+
+    if (
+        localStorage.getItem(
+            "BathroomComplete"
+        ) === "true"
+    ) {
+
+        document.getElementById(
+            "BathroomStatus"
+        ).innerHTML = "✅ ";
+	completedRooms.push(
+		"Bathroom"
+	);
+
+    }
+
+    if (
+        localStorage.getItem(
+            "BedroomComplete"
+        ) === "true"
+    ) {
+
+        document.getElementById(
+            "BedroomStatus"
+        ).innerHTML = "✅ ";
+	
+	completedRooms.push(
+	     "Bedroom"
+	);
+
+    }
+ if (
+        localStorage.getItem(
+            "HallwayComplete"
+        ) === "true"
+    ) {
+
+        document.getElementById(
+            "HallwayStatus"
+        ).innerHTML = "✅ ";
+	
+	completedRooms.push(
+		"Hallway"
+	);
+
+    }
+if (
+        localStorage.getItem(
+            "LivingRoomComplete"
+        ) === "true"
+    ) {
+
+        document.getElementById(
+            "LivingRoomStatus"
+        ).innerHTML = "✅ ";
+
+	completedRooms.push(
+	     "Living Room"
+	);
+
+    }
+if (
+        localStorage.getItem(
+            "DiningRoomComplete"
+        ) === "true"
+    ) {
+
+        document.getElementById(
+            "DiningRoomStatus"
+        ).innerHTML = "✅ ";
+
+	completedRooms.push(
+	     "Dinning Room"
+	);
+
+    }
+const customRooms =
+    JSON.parse(
+        localStorage.getItem(
+            "CustomRoomReports"
+        )
+    ) || [];
+
+customRooms.forEach((room) => {
+
+    const roomName =
+        room.split("\n")[0];
+
+    completedRooms.push(
+        roomName
+    );
+
+});
+document.getElementById(
+    "completedRoomsList"
+).innerHTML =
+
+    completedRooms.length
+
+    ?
+
+    completedRooms.join("<br>")
+
+    :
+
+    "None Yet";
+
+
+}
+
+function copyEntireReport() {
+const propertyAddress =
+    document.getElementById(
+        "propertyAddress"
+    ).value;
+
+    const reportDate =
+        document.getElementById(
+            "reportDate"
+        ).value;
+
+    const author =
+        document.getElementById(
+            "author"
+        ).value;
+
+    if (!reportDate) {
+
+        alert(
+            "Please select a date before copying the report."
+        );
+
+        return;
+
+    }
+
+    if (!author) {
+
+        alert(
+            "Please select an author before copying the report."
+        );
+
+        return;
+
+    }
+
+   
+    const kitchen =
+        localStorage.getItem(
+            "KitchenReport"
+        );
+
+    const bathroom =
+        localStorage.getItem(
+            "BathroomReport"
+        );
+
+    const bedroom =
+        localStorage.getItem(
+            "BedroomReport"
+        );
+    const hallway =
+        localStorage.getItem(
+            "HallwayReport"
+        );
+    const livingroom =
+        localStorage.getItem(
+            "LivingRoomReport"
+        );
+    const diningroom =
+	localStorage.getItem(
+		"DiningRoomReport"
+	);
+    const customrooms = JSON.parse(
+    localStorage.getItem(
+        "CustomRoomReports"
+    )
+) || [];
+
+
+
+    if (!kitchen && !bathroom && !bedroom && !hallway && !livingroom && !diningroom && customrooms.length === 0) {
+
+        alert(
+            "No completed room checklists found."
+        );
+
+        return;
+
+    }
+
+   let report =
+
+    "ALL ABOUT THAT SPACE PROPERTY SERVICES\n\n" +
+
+    "Property Address: " +
+    propertyAddress +
+    "\n\n" +
+
+    "Date: " +
+    reportDate +
+    "\n" +
+
+    "Author: " +
+    author +
+    "\n" +
+
+    "==================================================\n";
+    if (kitchen) {
+        report += kitchen;
+    }
+
+    if (bathroom) {
+        report += bathroom;
+    }
+
+    if (bedroom) {
+        report += bedroom;
+    }
+    if (hallway) {
+        report += hallway;
+    }
+    if (livingroom) {
+        report += livingroom;
+    }
+    if (diningroom) {
+        report += diningroom;
+    }
+    customrooms.forEach((room) => {
+
+    report += room;
+
+});
+
+
+    navigator.clipboard.writeText(report);
+
+    alert(
+        "Entire cleaning report copied to clipboard!"
+    );
+
+}
+function resetAllData() {
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to reset all cleaning data?"
+        );
+
+    if (confirmed) {
+
+        localStorage.clear();
+
+        alert(
+            "All cleaning data has been reset."
+        );
+
+        location.reload();
+
+    }
+
+}
+function updateClock() {
+
+    const now = new Date();
+
+    document.getElementById(
+        "clock"
+    ).innerHTML =
+        now.toLocaleTimeString();
+
+}
+
+setInterval(
+    updateClock,
+    1000
+);
+
+updateClock();
+
+updateRoomStatus();
+
+document.getElementById(
+    "propertyAddress"
+).addEventListener(
+    "input",
+    function () {
+
+        localStorage.setItem(
+            "PropertyAddress",
+            this.value
+        );
+
+    }
+);
+const savedAddress =
+    localStorage.getItem(
+        "PropertyAddress"
+    );
+
+if (savedAddress) {
+
+    document.getElementById(
+        "propertyAddress"
+    ).value =
+        savedAddress;
+
+}
+document.getElementById(
+    "reportDate"
+).addEventListener(
+    "change",
+    function () {
+
+        localStorage.setItem(
+            "ReportDate",
+            this.value
+        );
+
+    }
+);
+
+document.getElementById(
+    "author"
+).addEventListener(
+    "change",
+    function () {
+
+        localStorage.setItem(
+            "Author",
+            this.value
+        );
+
+    }
+);
+const savedDate =
+    localStorage.getItem(
+        "ReportDate"
+    );
+
+if (savedDate) {
+
+    document.getElementById(
+        "reportDate"
+    ).value =
+        savedDate;
+
+}
+
+const savedAuthor =
+    localStorage.getItem(
+        "Author"
+    );
+
+if (savedAuthor) {
+
+    document.getElementById(
+        "author"
+    ).value =
+        savedAuthor;
+
+}
+</script>
+
+</body>
+</html>

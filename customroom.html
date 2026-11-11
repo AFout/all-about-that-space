@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Room</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+h1 {
+    text-align: center;
+    color: #1697C9;
+}
+
+label {
+    display: block;
+    margin: 15px 0;
+    font-size: 18px;
+}
+
+textarea {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+.complete-btn {
+    background: #1697C9;
+    color: white;
+    font-weight: bold;
+}
+
+.complete-btn:hover {
+    background: #117ea9;
+}
+
+.notes-title {
+    margin-top: 25px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>➕ Custom Room</h1>
+
+<div class="notes-title">
+Room Name
+</div>
+
+<input
+type="text"
+id="roomName"
+onchange="loadTemplate()"
+placeholder="Example: Garage, Laundry Room, Office"
+style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ccc;
+box-sizing:border-box;
+">
+<div class="notes-title">
+Add Task
+</div>
+
+<input
+type="text"
+id="newTask"
+placeholder="Enter task"
+style="
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #ccc;
+box-sizing:border-box;
+">
+
+<button
+class="complete-btn"
+onclick="addTask()">
+
+➕ Add Task
+
+</button>
+
+<div id="taskList"></div>
+<div class="notes-title">
+📝 Notes
+</div>
+
+<textarea id="customNotes"
+placeholder="Enter notes, damages, maintenance issues, or other observations here..."></textarea>
+
+<button class="complete-btn" onclick="returnHome()">
+✅ Complete Room & Return Home
+</button>
+
+</div>
+
+<script>
+
+function addTask() {
+
+    const taskText =
+        document.getElementById(
+            "newTask"
+        ).value;
+
+    if (!taskText) {
+
+        return;
+
+    }
+
+    const taskList =
+        document.getElementById(
+            "taskList"
+        );
+
+    taskList.innerHTML +=
+
+        '<label>' +
+        '<input type="checkbox">' +
+        taskText +
+        '</label>';
+
+    document.getElementById(
+        "newTask"
+    ).value = "";
+
+}
+
+function loadTemplate() {
+
+    const roomName =
+        document.getElementById(
+            "roomName"
+        ).value.toLowerCase();
+
+    const taskList =
+        document.getElementById(
+            "taskList"
+        );
+
+    if (
+        roomName.includes(
+            "bedroom"
+        )
+    ) {
+
+        taskList.innerHTML =
+
+            '<label><input type="checkbox"> Washed Windows (glass, frame, sill, and sashes)</label>' +
+
+            '<label><input type="checkbox"> Washed Walls and Baseboards</label>' +
+
+            '<label><input type="checkbox"> Cleaned and Dusted Ceiling Fan</label>' +
+
+            '<label><input type="checkbox"> Swept and Mopped Floors</label>' +
+
+            '<label><input type="checkbox"> Vacuumed and Scrubbed Carpets</label>' +
+
+            '<label><input type="checkbox"> Cleaned Exterior and Interior of Entry Door</label>';
+
+    }
+
+
+else if (
+    roomName.includes(
+        "bath"
+    )
+) {
+
+    taskList.innerHTML =
+
+        '<label><input type="checkbox"> Cleaned and Sanitized Toilet</label>' +
+
+        '<label><input type="checkbox"> Cleaned Tub and Shower</label>' +
+
+        '<label><input type="checkbox"> Cleaned Sink and Vanity</label>' +
+
+        '<label><input type="checkbox"> Cleaned Mirrors</label>' +
+
+        '<label><input type="checkbox"> Washed Walls and Baseboards</label>' +
+
+        '<label><input type="checkbox"> Swept and Mopped Floors</label>' +
+
+        '<label><input type="checkbox"> Cleaned Exterior and Interior of Entry Door</label>';
+
+}
+}
+function saveChecklist() {
+
+    const roomName =
+        document.getElementById(
+            "roomName"
+        ).value;
+
+    if (!roomName) {
+
+        alert(
+            "Please enter a room name."
+        );
+
+        return false;
+
+    }
+
+    let report =
+        roomName.toUpperCase() +
+        "\n\n";
+
+    const checks =
+        document.querySelectorAll(
+            "input[type='checkbox']"
+        );
+
+    checks.forEach((box) => {
+
+        if (box.checked) {
+
+            report +=
+                box.parentElement.innerText +
+                ". ";
+
+        }
+
+    });
+
+    const notes =
+        document.getElementById(
+            "customNotes"
+        ).value;
+
+    if (notes.trim() !== "") {
+
+        report +=
+            "\n\nNotes: " +
+            notes;
+
+    }
+
+    report +=
+        "\n----------------------------------------\n";
+
+    let customRooms = JSON.parse(
+    localStorage.getItem(
+        "CustomRoomReports"
+    )
+) || [];
+
+customRooms.push(report);
+
+localStorage.setItem(
+    "CustomRoomReports",
+    JSON.stringify(
+        customRooms
+    )
+);
+    
+
+    alert(
+        roomName +
+        " saved successfully!"
+    );
+
+    return true;
+
+}
+
+function returnHome() {
+
+    if (saveChecklist()) {
+
+        location.href =
+            "index.html";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
