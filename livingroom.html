@@ -141,13 +141,31 @@ function saveChecklist() {
 
     report +=
         "\n----------------------------\n";
+const checkboxStates = [];
 
+checks.forEach((box) => {
+
+    checkboxStates.push(
+        box.checked
+    );
+
+});
+
+localStorage.setItem(
+    "LivingRoomChecks",
+    JSON.stringify(
+        checkboxStates
+    )
+);
     localStorage.setItem(
         "LivingRoomReport",
         report
     );
 
-
+localStorage.setItem(
+    "LivingRoomNotes",
+    notes
+);
     localStorage.setItem(
         "LivingRoomComplete",
         "true"
@@ -162,6 +180,50 @@ function returnHome() {
     location.href = "index.html";
 
 }
+window.onload = function() {
+
+    const savedChecks =
+        JSON.parse(
+            localStorage.getItem(
+                "LivingRoomChecks"
+            )
+        );
+
+    if (savedChecks) {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "input[type='checkbox']"
+            );
+
+        checkboxes.forEach(
+            (box, index) => {
+
+                box.checked =
+                    savedChecks[
+                        index
+                    ];
+
+            }
+        );
+
+    }
+
+    const savedNotes =
+        localStorage.getItem(
+            "LivingRoomNotes"
+        );
+
+    if (savedNotes) {
+
+        document.getElementById(
+            "livingroomNotes"
+        ).value =
+            savedNotes;
+
+    }
+
+};
 
 </script>
 
