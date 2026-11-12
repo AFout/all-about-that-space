@@ -154,9 +154,31 @@ function saveChecklist() {
     report +=
         "\n----------------------------\n";
 
+    const checkboxStates = [];
+
+    checks.forEach((box) => {
+
+        checkboxStates.push(
+            box.checked
+        );
+
+    });
+
+    localStorage.setItem(
+        "BathroomChecks",
+        JSON.stringify(
+            checkboxStates
+        )
+    );
+
     localStorage.setItem(
         "BathroomReport",
         report
+    );
+
+    localStorage.setItem(
+        "BathroomNotes",
+        notes
     );
 
     localStorage.setItem(
@@ -174,7 +196,51 @@ function returnHome() {
 
 }
 
-</script>
+window.onload = function() {
 
+    const savedChecks =
+        JSON.parse(
+            localStorage.getItem(
+                "BathroomChecks"
+            )
+        );
+
+    if (savedChecks) {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "input[type='checkbox']"
+            );
+
+        checkboxes.forEach(
+            (box, index) => {
+
+                box.checked =
+                    savedChecks[
+                        index
+                    ];
+
+            }
+        );
+
+    }
+
+    const savedNotes =
+        localStorage.getItem(
+            "BathroomNotes"
+        );
+
+    if (savedNotes) {
+
+        document.getElementById(
+            "bathroomNotes"
+        ).value =
+            savedNotes;
+
+    }
+
+};
+
+</script>
 </body>
 </html>
