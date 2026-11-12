@@ -112,14 +112,14 @@ function saveChecklist() {
         "input[type='checkbox']"
     );
 
-    let report = "DININGROOM\n\n";
+    let report = "DINING ROOM\n\n";
 
     checks.forEach((box) => {
 
         if (box.checked) {
 
             report +=
-               box.parentElement.innerText +
+                box.parentElement.innerText +
                 ". ";
 
         }
@@ -142,11 +142,32 @@ function saveChecklist() {
     report +=
         "\n----------------------------\n";
 
+    const checkboxStates = [];
+
+    checks.forEach((box) => {
+
+        checkboxStates.push(
+            box.checked
+        );
+
+    });
+
+    localStorage.setItem(
+        "DiningRoomChecks",
+        JSON.stringify(
+            checkboxStates
+        )
+    );
+
     localStorage.setItem(
         "DiningRoomReport",
         report
     );
 
+    localStorage.setItem(
+        "DiningRoomNotes",
+        notes
+    );
 
     localStorage.setItem(
         "DiningRoomComplete",
@@ -163,7 +184,49 @@ function returnHome() {
 
 }
 
-</script>
+window.onload = function() {
 
+    const savedChecks =
+        JSON.parse(
+            localStorage.getItem(
+                "DiningRoomChecks"
+            )
+        );
+
+    if (savedChecks) {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "input[type='checkbox']"
+            );
+
+        checkboxes.forEach(
+            (box, index) => {
+
+                box.checked =
+                    savedChecks[index];
+
+            }
+        );
+
+    }
+
+    const savedNotes =
+        localStorage.getItem(
+            "DiningRoomNotes"
+        );
+
+    if (savedNotes) {
+
+        document.getElementById(
+            "diningroomNotes"
+        ).value =
+            savedNotes;
+
+    }
+
+};
+
+</script>
 </body>
 </html>
