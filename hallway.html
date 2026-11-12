@@ -123,7 +123,7 @@ function saveChecklist() {
         if (box.checked) {
 
             report +=
-               box.parentElement.innerText +
+                box.parentElement.innerText +
                 ". ";
 
         }
@@ -146,9 +146,31 @@ function saveChecklist() {
     report +=
         "\n----------------------------\n";
 
+    const checkboxStates = [];
+
+    checks.forEach((box) => {
+
+        checkboxStates.push(
+            box.checked
+        );
+
+    });
+
+    localStorage.setItem(
+        "HallwayChecks",
+        JSON.stringify(
+            checkboxStates
+        )
+    );
+
     localStorage.setItem(
         "HallwayReport",
         report
+    );
+
+    localStorage.setItem(
+        "HallwayNotes",
+        notes
     );
 
     localStorage.setItem(
@@ -166,7 +188,49 @@ function returnHome() {
 
 }
 
-</script>
+window.onload = function() {
 
+    const savedChecks =
+        JSON.parse(
+            localStorage.getItem(
+                "HallwayChecks"
+            )
+        );
+
+    if (savedChecks) {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "input[type='checkbox']"
+            );
+
+        checkboxes.forEach(
+            (box, index) => {
+
+                box.checked =
+                    savedChecks[index];
+
+            }
+        );
+
+    }
+
+    const savedNotes =
+        localStorage.getItem(
+            "HallwayNotes"
+        );
+
+    if (savedNotes) {
+
+        document.getElementById(
+            "hallwayNotes"
+        ).value =
+            savedNotes;
+
+    }
+
+};
+
+</script>
 </body>
 </html>
