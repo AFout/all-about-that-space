@@ -153,11 +153,30 @@ function saveChecklist() {
 
     report +=
         "\n----------------------------\n";
+const checkboxStates = [];
 
+checks.forEach((box) => {
+
+    checkboxStates.push(
+        box.checked
+    );
+
+});
+
+localStorage.setItem(
+    "KitchenChecks",
+    JSON.stringify(
+        checkboxStates
+    )
+);
     localStorage.setItem(
         "KitchenReport",
         report
     );
+localStorage.setItem(
+    "KitchenNotes",
+    notes
+);
 
     localStorage.setItem(
         "KitchenComplete",
@@ -173,6 +192,50 @@ function returnHome() {
     location.href = "index.html";
 
 }
+window.onload = function() {
+
+    const savedChecks =
+        JSON.parse(
+            localStorage.getItem(
+                "KitchenChecks"
+            )
+        );
+
+    if (savedChecks) {
+
+        const checkboxes =
+            document.querySelectorAll(
+                "input[type='checkbox']"
+            );
+
+        checkboxes.forEach(
+            (box, index) => {
+
+                box.checked =
+                    savedChecks[
+                        index
+                    ];
+
+            }
+        );
+
+    }
+
+    const savedNotes =
+        localStorage.getItem(
+            "KitchenNotes"
+        );
+
+    if (savedNotes) {
+
+        document.getElementById(
+            "kitchenNotes"
+        ).value =
+            savedNotes;
+
+    }
+
+};
 
 </script>
 
