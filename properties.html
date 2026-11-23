@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Property Dashboard</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+    padding: 20px;
+}
+
+.container {
+    max-width: 700px;
+    margin: auto;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 250px;
+    width: 100%;
+    display: block;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    color: #1697C9;
+}
+
+.panel {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background: #1697C9;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #117ea9;
+}
+
+.property {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    font-size: 18px;
+}
+
+.property:hover {
+    background: #f0f8fc;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+
+        <img
+            src="logo.png"
+            alt="All About That Space Logo">
+
+    </div>
+
+    <h2>🏠 Property Dashboard</h2>
+
+    <div class="panel">
+
+        <input
+            type="text"
+            id="propertyName"
+            placeholder="Enter Property Address">
+
+        <br><br>
+
+        <button
+            onclick="saveProperty()">
+
+            ➕ Add Property
+
+        </button>
+
+    </div>
+
+    <div class="panel">
+
+        <h3>Saved Properties</h3>
+
+        <div id="propertyList">
+
+            No Properties Yet
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function saveProperty() {
+
+    const address =
+        document.getElementById(
+            "propertyName"
+        ).value;
+
+    if (!address) {
+
+        alert(
+            "Please enter a property address."
+        );
+
+        return;
+
+    }
+
+    let properties =
+        JSON.parse(
+            localStorage.getItem(
+                "Properties"
+            )
+        ) || [];
+
+    properties.push(
+        address
+    );
+
+    localStorage.setItem(
+        "Properties",
+        JSON.stringify(
+            properties
+        )
+    );
+
+    loadProperties();
+
+    document.getElementById(
+        "propertyName"
+    ).value = "";
+
+}
+
+function loadProperties() {
+
+    let properties =
+        JSON.parse(
+            localStorage.getItem(
+                "Properties"
+            )
+        ) || [];
+
+    document.getElementById(
+        "propertyList"
+    ).innerHTML =
+
+        properties.length
+
+        ?
+
+        properties.map(
+            property =>
+
+            `<div
+                class="property"
+                onclick="selectProperty('${property}')">
+
+                🏠 ${property}
+
+            </div>`
+
+        ).join("")
+
+        :
+
+        "No Properties Yet";
+
+}
+function selectProperty(property) {
+
+    localStorage.setItem(
+        "CurrentProperty",
+        property
+    );
+
+    window.location.href =
+        "index.html";
+
+
+}
+loadProperties();
+
+</script>
+
+</body>
+
+</html>
