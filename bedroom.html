@@ -105,6 +105,10 @@ placeholder="Enter notes, damages, maintenance issues, or other observations her
 <script>
 
 function saveChecklist() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
 
     const checks = document.querySelectorAll(
         "input[type='checkbox']"
@@ -151,24 +155,28 @@ function saveChecklist() {
     });
 
     localStorage.setItem(
-        "BedroomChecks",
+	currentProperty +
+        "_BedroomChecks",
         JSON.stringify(
             checkboxStates
         )
     );
 
     localStorage.setItem(
-        "BedroomReport",
+	currentProperty +
+        "_BedroomReport",
         report
     );
 
     localStorage.setItem(
-        "BedroomNotes",
+	currentProperty +
+        "_BedroomNotes",
         notes
     );
 
     localStorage.setItem(
-        "BedroomComplete",
+	currentProperty +
+        "_BedroomComplete",
         "true"
     );
 
@@ -184,10 +192,16 @@ function returnHome() {
 
 window.onload = function() {
 
+    const currentProperty =
+        localStorage.getItem(
+            "CurrentProperty"
+        );
+
     const savedChecks =
         JSON.parse(
             localStorage.getItem(
-                "BedroomChecks"
+                currentProperty +
+                "_BedroomChecks"
             )
         );
 
@@ -202,31 +216,29 @@ window.onload = function() {
             (box, index) => {
 
                 box.checked =
-                    savedChecks[
-                        index
-                    ];
+                    savedChecks[index];
 
             }
         );
 
     }
 
-   const savedNotes =
-    localStorage.getItem(
-        "BedroomNotes"
-    );
+    const savedNotes =
+        localStorage.getItem(
+            currentProperty +
+            "_BedroomNotes"
+        );
 
-if (savedNotes) {
+    if (savedNotes) {
 
-    document.getElementById(
-        "bedroomNotes"
-    ).value =
-        savedNotes;
+        document.getElementById(
+            "bedroomNotes"
+        ).value =
+            savedNotes;
 
-}
+    }
 
 };
-
 </script>
           
 </body>
