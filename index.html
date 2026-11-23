@@ -302,7 +302,17 @@ onclick="resetAllData()">
 
 </div>
 <script>
-window.location.replace("properties.html");
+if (
+    !localStorage.getItem(
+        "CurrentProperty"
+    )
+) {
+
+    window.location.replace(
+        "properties.html"
+    );
+
+}
 function updateRoomStatus() {
 
 	let completedRooms = [];
@@ -607,7 +617,6 @@ function openCustomRoom(roomName) {
 
 }
 
-}
 function resetAllData() {
 
     const confirmed =
