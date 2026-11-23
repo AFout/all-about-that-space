@@ -119,6 +119,11 @@ placeholder="Enter notes, damages, maintenance issues, or other observations her
 <script>
 
 function saveChecklist() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
+
 
     const checks = document.querySelectorAll(
         "input[type='checkbox']"
@@ -164,22 +169,27 @@ checks.forEach((box) => {
 });
 
 localStorage.setItem(
-    "KitchenChecks",
+    currentProperty +
+    "_KitchenChecks",
     JSON.stringify(
         checkboxStates
     )
-);
-    localStorage.setItem(
-        "KitchenReport",
+);    
+localStorage.setItem(
+	currentProperty +
+        "_KitchenReport",
         report
     );
+
 localStorage.setItem(
-    "KitchenNotes",
+    currentProperty +
+    "_KitchenNotes",
     notes
 );
 
     localStorage.setItem(
-        "KitchenComplete",
+	currentProperty +
+        "_KitchenComplete",
         "true"
     );
 
@@ -193,12 +203,16 @@ function returnHome() {
 
 }
 window.onload = function() {
-
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
     const savedChecks =
         JSON.parse(
-            localStorage.getItem(
-                "KitchenChecks"
-            )
+           localStorage.getItem(
+    currentProperty +
+    "_KitchenChecks"
+)
         );
 
     if (savedChecks) {
@@ -222,9 +236,10 @@ window.onload = function() {
     }
 
     const savedNotes =
-        localStorage.getItem(
-            "KitchenNotes"
-        );
+       localStorage.getItem(
+    currentProperty +
+    "_KitchenNotes"
+);
 
     if (savedNotes) {
 
