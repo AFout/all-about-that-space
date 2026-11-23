@@ -225,6 +225,10 @@ else if (
 }
 }
 function saveChecklist() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
 
     const roomName =
         document.getElementById(
@@ -249,6 +253,25 @@ function saveChecklist() {
         document.querySelectorAll(
             "input[type='checkbox']"
         );
+const taskNames = [];
+
+checks.forEach((box) => {
+
+    taskNames.push(
+        box.parentElement.innerText
+    );
+
+});
+const taskStates = [];
+
+checks.forEach((box) => {
+
+    taskStates.push(
+        box.checked
+    );
+
+});
+
 
     checks.forEach((box) => {
 
@@ -280,14 +303,58 @@ function saveChecklist() {
 
     let customRooms = JSON.parse(
     localStorage.getItem(
-        "CustomRoomReports"
+	currentProperty +
+        "_CustomRoomReports"
     )
 ) || [];
 
-customRooms.push(report);
+const existingIndex =
+    customRooms.findIndex(
+        room =>
+        room.startsWith(
+            roomName.toUpperCase()
+        )
+    );
 
+if (
+    existingIndex >= 0
+) {
+
+    customRooms[
+        existingIndex
+    ] = report;
+
+} else {
+
+    customRooms.push(
+        report
+    );
+
+}
 localStorage.setItem(
-    "CustomRoomReports",
+    currentProperty +
+    "_" +
+    roomName.toUpperCase() +
+    "_Tasks",
+    JSON.stringify(taskNames)
+);
+localStorage.setItem(
+    currentProperty +
+    "_" +
+    roomName.toUpperCase() +
+    "_TaskStates",
+    JSON.stringify(taskStates)
+);
+localStorage.setItem(
+    currentProperty +
+    "_" +
+    roomName.toUpperCase() +
+    "_Notes",
+    notes
+);
+localStorage.setItem(
+currentProperty +
+    "_CustomRoomReports",
     JSON.stringify(
         customRooms
     )
@@ -313,7 +380,115 @@ function returnHome() {
     }
 
 }
+window.onload = function() {
 
+    const selectedRoom =
+        localStorage.getItem(
+            "SelectedCustomRoom"
+        );
+
+    const currentProperty =
+        localStorage.getItem(
+            "CurrentProperty"
+        );
+
+    if (selectedRoom) {
+
+        document.getElementById(
+            "roomName"
+        ).value =
+            selectedRoom;
+const savedTasks =
+    JSON.parse(
+        localStorage.getItem(
+            currentProperty +
+            "_" +
+            selectedRoom +
+            "_Tasks"
+        )
+    ) || [];
+
+const savedTaskStates =
+    JSON.parse(
+        localStorage.getItem(
+            currentProperty +
+            "_" +
+            selectedRoom +
+            "_TaskStates"
+        )
+    ) || [];
+const taskList =
+    document.getElementById(
+        "taskList"
+    );
+
+taskList.innerHTML = "";
+
+savedTasks.forEach(
+    (task, index) => {
+
+        taskList.innerHTML +=
+            '<label>' +
+            '<input type="checkbox" ' +
+            (savedTaskStates[index]
+                ? "checked"
+                : "") +
+            '>' +
+            task +
+            '</label>';
+
+    }
+);    
+}
+
+    const customRooms =
+        JSON.parse(
+            localStorage.getItem(
+                currentProperty +
+                "_CustomRoomReports"
+            )
+        ) || [];
+
+    const roomReport =
+        customRooms.find(
+            room =>
+                room.startsWith(
+                    selectedRoom
+                )
+        );
+
+    if (roomReport) {
+
+        const notesStart =
+            roomReport.indexOf(
+                "Notes:"
+            );
+
+        if (
+            notesStart !== -1
+        ) {
+
+            let notes =
+                roomReport.substring(
+                    notesStart + 6
+                );
+
+            notes =
+                notes.replace(
+                    "\n----------------------------------------\n",
+                    ""
+                );
+
+            document.getElementById(
+                "customNotes"
+            ).value =
+                notes.trim();
+
+        }
+
+    }
+
+};
 </script>
 
 </body>
