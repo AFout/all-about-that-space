@@ -277,6 +277,14 @@ onclick="location.href='customroom.html'">
 
 </div>
 <button
+class="report-btn"
+style="background:#F4B400;color:black;"
+onclick="changeProperty()">
+
+🏠 Change Property
+
+</button>
+<button
 class="report-btn copy-btn"
 onclick="copyEntireReport()">
 
@@ -294,13 +302,20 @@ onclick="resetAllData()">
 
 </div>
 <script>
+window.location.href = "properties.html";
 function updateRoomStatus() {
 
 	let completedRooms = [];
+	
+	const CurrentProperty =
+	    localStorage.getItem(
+		"CurrentProperty"
+);
 
     if (
         localStorage.getItem(
-            "KitchenComplete"
+	     CurrentProperty +
+            "_KitchenComplete"
         ) === "true"
     ) {
 
@@ -318,7 +333,8 @@ function updateRoomStatus() {
 
     if (
         localStorage.getItem(
-            "BathroomComplete"
+	     CurrentProperty +
+            "_BathroomComplete"
         ) === "true"
     ) {
 
@@ -333,7 +349,8 @@ function updateRoomStatus() {
 
     if (
         localStorage.getItem(
-            "BedroomComplete"
+	    CurrentProperty +
+            "_BedroomComplete"
         ) === "true"
     ) {
 
@@ -348,7 +365,8 @@ function updateRoomStatus() {
     }
  if (
         localStorage.getItem(
-            "HallwayComplete"
+	    CurrentProperty +
+            "_HallwayComplete"
         ) === "true"
     ) {
 
@@ -363,7 +381,8 @@ function updateRoomStatus() {
     }
 if (
         localStorage.getItem(
-            "LivingRoomComplete"
+	CurrentProperty +
+            "_LivingRoomComplete"
         ) === "true"
     ) {
 
@@ -378,7 +397,8 @@ if (
     }
 if (
         localStorage.getItem(
-            "DiningRoomComplete"
+	CurrentProperty +
+            "_DiningRoomComplete"
         ) === "true"
     ) {
 
@@ -394,7 +414,8 @@ if (
 const customRooms =
     JSON.parse(
         localStorage.getItem(
-            "CustomRoomReports"
+	CurrentProperty +
+            "_CustomRoomReports"
         )
     ) || [];
 
@@ -404,7 +425,11 @@ customRooms.forEach((room) => {
         room.split("\n")[0];
 
     completedRooms.push(
-        roomName
+	'<a href ="#" onclick="openCustomRoom(\''+
+        roomName +
+	'\')">'+
+	roomName +
+	'</a>'
     );
 
 });
@@ -426,6 +451,10 @@ document.getElementById(
 }
 
 function copyEntireReport() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
 const propertyAddress =
     document.getElementById(
         "propertyAddress"
@@ -464,33 +493,40 @@ const propertyAddress =
    
     const kitchen =
         localStorage.getItem(
-            "KitchenReport"
+	     currentProperty +
+            "_KitchenReport"
         );
 
     const bathroom =
         localStorage.getItem(
-            "BathroomReport"
+	    currentProperty +
+            "_BathroomReport"
         );
 
     const bedroom =
         localStorage.getItem(
-            "BedroomReport"
+	     currentProperty +
+            "_BedroomReport"
         );
     const hallway =
         localStorage.getItem(
-            "HallwayReport"
+	    currentProperty +
+            "_HallwayReport"
         );
     const livingroom =
         localStorage.getItem(
-            "LivingRoomReport"
+	     currentProperty +
+            "_LivingRoomReport"
         );
     const diningroom =
 	localStorage.getItem(
-		"DiningRoomReport"
+	currentProperty +
+		"_DiningRoomReport"
 	);
     const customrooms = JSON.parse(
     localStorage.getItem(
-        "CustomRoomReports"
+	currentProperty +
+        "_CustomRoomReports"
     )
 ) || [];
 
@@ -555,6 +591,21 @@ const propertyAddress =
     alert(
         "Entire cleaning report copied to clipboard!"
     );
+
+}
+function openCustomRoom(roomName) {
+
+    alert(roomName);
+
+    localStorage.setItem(
+        "SelectedCustomRoom",
+        roomName
+    );
+
+    location.href =
+        "customroom.html";
+
+}
 
 }
 function resetAllData() {
@@ -675,6 +726,25 @@ if (savedAuthor) {
         "author"
     ).value =
         savedAuthor;
+
+}
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
+
+if (currentProperty) {
+
+    document.getElementById(
+        "propertyAddress"
+    ).value =
+        currentProperty;
+
+}
+function changeProperty() {
+
+    window.location.href =
+        "properties.html";
 
 }
 </script>
