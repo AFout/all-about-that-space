@@ -111,6 +111,10 @@ placeholder="Enter notes, damages, maintenance issues, or other observations her
 <script>
 
 function saveChecklist() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
 
     const checks = document.querySelectorAll(
         "input[type='checkbox']"
@@ -157,24 +161,28 @@ function saveChecklist() {
     });
 
     localStorage.setItem(
-        "HallwayChecks",
+	currentProperty +
+        "_HallwayChecks",
         JSON.stringify(
             checkboxStates
         )
     );
 
     localStorage.setItem(
-        "HallwayReport",
+	currentProperty +
+        "_HallwayReport",
         report
     );
 
     localStorage.setItem(
-        "HallwayNotes",
+	currentProperty +
+        "_HallwayNotes",
         notes
     );
 
     localStorage.setItem(
-        "HallwayComplete",
+	currentProperty +
+        "_HallwayComplete",
         "true"
     );
 
@@ -183,17 +191,24 @@ function saveChecklist() {
 function returnHome() {
 
     saveChecklist();
+    
 
     location.href = "index.html";
 
 }
 
 window.onload = function() {
+const currentProperty =
+        localStorage.getItem(
+
+            "CurrentProperty"
+        );
 
     const savedChecks =
         JSON.parse(
             localStorage.getItem(
-                "HallwayChecks"
+		currentProperty +
+                "_HallwayChecks"
             )
         );
 
@@ -217,7 +232,8 @@ window.onload = function() {
 
     const savedNotes =
         localStorage.getItem(
-            "HallwayNotes"
+	currentProperty +
+            "_HallwayNotes"
         );
 
     if (savedNotes) {
