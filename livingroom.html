@@ -107,6 +107,10 @@ placeholder="Enter notes, damages, maintenance issues, or other observations her
 <script>
 
 function saveChecklist() {
+const currentProperty =
+    localStorage.getItem(
+        "CurrentProperty"
+    );
 
     const checks = document.querySelectorAll(
         "input[type='checkbox']"
@@ -152,22 +156,26 @@ checks.forEach((box) => {
 });
 
 localStorage.setItem(
-    "LivingRoomChecks",
+currentProperty +
+    "_LivingRoomChecks",
     JSON.stringify(
         checkboxStates
     )
 );
     localStorage.setItem(
-        "LivingRoomReport",
+	currentProperty +
+        "_LivingRoomReport",
         report
     );
 
 localStorage.setItem(
-    "LivingRoomNotes",
+currentProperty +
+    "_LivingRoomNotes",
     notes
 );
     localStorage.setItem(
-        "LivingRoomComplete",
+currentProperty +
+        "_LivingRoomComplete",
         "true"
     );
 
@@ -182,10 +190,16 @@ function returnHome() {
 }
 window.onload = function() {
 
+    const currentProperty =
+        localStorage.getItem(
+            "CurrentProperty"
+        );
+
     const savedChecks =
         JSON.parse(
             localStorage.getItem(
-                "LivingRoomChecks"
+                currentProperty +
+                "_LivingRoomChecks"
             )
         );
 
@@ -200,9 +214,7 @@ window.onload = function() {
             (box, index) => {
 
                 box.checked =
-                    savedChecks[
-                        index
-                    ];
+                    savedChecks[index];
 
             }
         );
@@ -211,7 +223,8 @@ window.onload = function() {
 
     const savedNotes =
         localStorage.getItem(
-            "LivingRoomNotes"
+            currentProperty +
+            "_LivingRoomNotes"
         );
 
     if (savedNotes) {
