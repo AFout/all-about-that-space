@@ -984,6 +984,29 @@ async function exportPDF(property) {
 
     const pdf = new jsPDF();
 
+    const logo = new Image();
+
+    logo.src = "./logo.png";
+
+    await new Promise(resolve => {
+
+        logo.onload = resolve;
+
+    });
+
+    pdf.addImage(
+        logo,
+        "PNG",
+        75,
+        5,
+        60,
+        30
+    );
+
+    // rest of PDF code...
+
+};
+
     const amount =
         document.getElementById(
             "invoiceAmount"
