@@ -1064,6 +1064,34 @@ async function exportPDF(property) {
         151,
         201
     );
+	pdf.setTextColor(
+    255,
+    255,
+    255
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.text(
+    "Services Rendered",
+    105,
+    107,
+    { align: "center" }
+);
+
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
+
+pdf.setTextColor(
+    0,
+    0,
+    0
+);
 
     pdf.rect(
         15,
