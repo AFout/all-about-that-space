@@ -997,10 +997,10 @@ async function exportPDF(property) {
     pdf.addImage(
         logo,
         "PNG",
-        75,
+        65,
         5,
-        60,
-        30
+        80,
+        35
     );
 
     const amount =
@@ -1013,12 +1013,12 @@ async function exportPDF(property) {
             "NextInvoiceNumber"
         ) || 1001;
 
-    pdf.setFontSize(22);
+    pdf.setFontSize(18);
 
     pdf.text(
         "ALL ABOUT THAT SPACE",
         105,
-        15,
+        58,
         { align: "center" }
     );
 
@@ -1036,44 +1036,44 @@ async function exportPDF(property) {
     pdf.text(
         "Invoice #: " + invoiceNumber,
         15,
-        35
+        75
     );
 
     pdf.text(
         "Date: " +
         new Date().toLocaleDateString(),
         140,
-        35
+        75
     );
 
     pdf.text(
         "Bill To:",
         15,
-        50
+        90
     );
 
     pdf.text(
         "ClearSky Realty Inc.",
         15,
-        58
+        98
     );
 
     pdf.text(
         "202 49th St. S.E.",
         15,
-        66
+        106
     );
 
     pdf.text(
         "Canton, OH 44707",
         15,
-        74
+        114
     );
 
     pdf.text(
         "Property: " + property,
         15,
-        90
+        130
     );
 
     pdf.setFillColor(
@@ -1084,7 +1084,7 @@ async function exportPDF(property) {
 
     pdf.rect(
         15,
-        100,
+        140,
         180,
         10,
         "F"
@@ -1114,7 +1114,7 @@ async function exportPDF(property) {
         0
     );
 
-    let y = 120;
+    let y = 160;
 
     const customRooms =
         JSON.parse(
