@@ -1107,17 +1107,50 @@ pdf.setTextColor(
         255
     );
 
-    pdf.text(
-        "Room",
-        20,
-        107
-    );
+    pdf.setFillColor(
+    22,
+    151,
+    201
+);
 
-    pdf.text(
-        "Notes",
-        60,
-        107
-    );
+pdf.rect(
+    15,
+    140,
+    180,
+    10,
+    "F"
+);
+
+pdf.setTextColor(
+    255,
+    255,
+    255
+);
+
+pdf.setFont(
+    "helvetica",
+    "bold"
+);
+
+pdf.setFontSize(14);
+
+pdf.text(
+    "SERVICES RENDERED",
+    105,
+    147,
+    { align: "center" }
+);
+
+pdf.setFont(
+    "helvetica",
+    "normal"
+);
+
+pdf.setTextColor(
+    0,
+    0,
+    0
+);
 
     pdf.setTextColor(
         0,
