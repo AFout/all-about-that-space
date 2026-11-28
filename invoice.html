@@ -997,10 +997,10 @@ async function exportPDF(property) {
     pdf.addImage(
         logo,
         "PNG",
-        65,
+        55,
         5,
-        80,
-        35
+        100,
+        40
     );
 
     const amount =
@@ -1013,37 +1013,20 @@ async function exportPDF(property) {
             "NextInvoiceNumber"
         ) || 1001;
 
-    pdf.setFontSize(18);
-
-    pdf.text(
-        "ALL ABOUT THAT SPACE",
-        105,
-        58,
-        { align: "center" }
-    );
-
-    pdf.setFontSize(14);
-
-    pdf.text(
-        "PROPERTY SERVICES",
-        105,
-        23,
-        { align: "center" }
-    );
+   
 
     pdf.setFontSize(12);
-
     pdf.text(
         "Invoice #: " + invoiceNumber,
         15,
-        75
+        55
     );
 
     pdf.text(
         "Date: " +
         new Date().toLocaleDateString(),
         140,
-        75
+        55
     );
 
     pdf.text(
