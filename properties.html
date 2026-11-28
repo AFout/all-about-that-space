@@ -2,19 +2,11 @@
 <html lang="en">
 
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Property Dashboard</title>
-
-<link rel="apple-touch-icon" href="logo.png">
-
-<meta name="apple-mobile-web-app-capable"
-      content="yes">
-
-<meta name="apple-mobile-web-app-title"
-      content="All About That Space">
 
 <style>
 
@@ -90,6 +82,14 @@ button:hover {
 .property:hover {
     background: #f0f8fc;
 }
+#invoiceDetails {
+
+    max-height: 80vh;
+
+    overflow-y: auto;
+
+}
+
 
 </style>
 
@@ -124,6 +124,17 @@ button:hover {
             ➕ Add Property
 
         </button>
+
+<button
+style="
+background:#4CAF50;
+margin-top: 15px;
+"
+onclick="location.href='invoice.html'">
+
+💰 Invoice Center
+
+</button>
 
     </div>
 
@@ -229,7 +240,7 @@ function selectProperty(property) {
     );
 
     window.location.href =
-        "./index.html";
+        "index.html";
 
 
 }
