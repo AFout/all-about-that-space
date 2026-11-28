@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+Invoice Center
+</title>
+
+<style>
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    margin-top: 15px;
+
+}
+
+th,
+td {
+
+    border: 1px solid #ccc;
+
+    padding: 10px;
+
+    text-align: left;
+
+}
+
+th {
+
+    background: #1697C9;
+
+    color: white;
+
+}
+
+.invoiceHeader {
+
+    background:#f8f8f8;
+
+    border:1px solid #ccc;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    text-align:center;
+
+
+}
+
+.amountDue {
+
+    background: #e8f5e9;
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+    text-align: center;
+
+    padding: 15px;
+
+    border-radius: 10px;
+
+    margin-top: 20px;
+
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background:#f4f7fa;
+    padding:20px;
+}
+
+.container {
+    max-width:800px;
+    margin:auto;
+}
+
+.panel {
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:20px;
+}
+
+.property {
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-top:10px;
+    cursor:pointer;
+    border:1px solid #ddd;
+}
+
+.property:hover {
+
+    background:#f0f8fc;
+
+}
+
+input {
+
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    box-sizing:border-box;
+
+}
+
+button {
+
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+
+}
+
+.copyBtn {
+
+    background:#1697C9;
+    color:white;
+
+}
+
+.saveBtn {
+
+    background:#4CAF50;
+    color:white;
+    margin-top:10px;
+
+}
+
+pre {
+
+    white-space:pre-wrap;
+
+}
+#invoiceDetails {
+
+    max-height: 80vh;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<h1>
+💰 Invoice Center
+</h1>
+<button
+style="
+background:#F4B400;
+color:black;
+margin-bottom:20px;
+"
+onclick="location.href='properties.html'">
+
+🏠 Return to Property Dashboard
+
+</button>
+
+<div class="panel">
+
+<input
+type="text"
+id="invoiceSearch"
+placeholder="Search Property"
+oninput="loadProperties()">
+
+</div>
+
+<div class="panel">
+
+<h3>
+Properties
+</h3>
+
+<div id="propertyList">
+
+</div>
+
+</div>
+
+<div
+class="panel"
+id="invoiceDetails">
+
+Select a Property
+
+</div>
+<div class="panel">
+
+<h3>
+📂 Invoice History
+</h3>
+
+<div id="invoiceHistory">
+
+No Saved Invoices
+
+</div>
+
+</div>
+
+</div>
+<script>
+
+function loadProperties() {
+
+    const searchText =
+        document.getElementById(
+            "invoiceSearch"
+        ).value.toLowerCase();
+
+    let properties =
+        JSON.parse(
+            localStorage.getItem(
+                "Properties"
+            )
+        ) || [];
+
+    properties =
+        properties.filter(
+            property =>
+                property
+                .toLowerCase()
+                .includes(
+                    searchText
+                )
+        );
+
+    document.getElementById(
+        "propertyList"
+    ).innerHTML =
+
+        properties.map(
+            property =>
+
+            `<div
+                class="property"
+                onclick="loadInvoice('${property}')">
+
+                🏠 ${property}
+
+            </div>`
+
+        ).join("");
+
+}
+
+loadProperties();
+loadInvoices();
+function loadInvoice(property) {
+const today = new Date();
+
+const invoiceDate =
+
+    String(
+        today.getMonth() + 1
+    ).padStart(
+        2,
+        "0"
+    ) +
+
+    "/" +
+
+    String(
+        today.getDate()
+    ).padStart(
+        2,
+        "0"
+    ) +
+
+    "/" +
+
+    today.getFullYear();
+    const reports = [
+
+        localStorage.getItem(
+            property +
+            "_KitchenReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BathroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BedroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_HallwayReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_LivingRoomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_DiningRoomReport"
+        )
+
+    ];
+
+    const customRooms =
+
+    JSON.parse(
+        localStorage.getItem(
+            property +
+            "_CustomRoomReports"
+        )
+    ) || [];
+
+
+    let reportText = "";
+    let tableRows = "";
+
+    const roomNames = [
+
+    "Kitchen",
+
+    "Bathroom",
+
+    "Bedroom",
+
+    "Hallway",
+
+    "Living Room",
+
+    "Dining Room"
+
+];
+
+reports.forEach(
+    (report, index) => {
+
+        if (report) {
+
+            tableRows +=
+
+            `<tr>
+
+                <td>
+
+                    ${roomNames[index]}
+
+                </td>
+
+                <td>
+
+                    ${report.replaceAll(
+                        "\n",
+                        "<br>"
+                    )}
+
+                </td>
+
+            </tr>`;
+
+        }
+
+    }
+);
+
+   customRooms.forEach(room => {
+
+    const roomName =
+        room.split("\n")[0];
+
+    tableRows += `
+
+    <tr>
+
+        <td>
+            ${roomName}
+        </td>
+
+        <td>
+            ${room.replaceAll("\n", "<br>")}
+        </td>
+
+    </tr>`;
+
+});
+
+document.getElementById(
+    "invoiceDetails"
+).innerHTML =
+
+`
+<div class="invoiceHeader">
+<img
+src="logo-small.png"
+style="
+    max-width:250px;
+    display:block;
+    margin:auto;
+    margin-bottom:15px;
+">
+
+    <h1>
+
+        ALL ABOUT THAT SPACE
+
+    </h1>
+
+    <h3>
+
+        PROPERTY SERVICES
+
+    </h3>
+
+    <hr>
+
+   <h3>
+
+Bill To
+
+</h3>
+
+<div
+style="
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    border:1px solid #ddd;
+">
+
+ClearSky Realty Inc.
+
+<br>
+
+202 49th St. S.E.
+
+<br>
+
+Canton, OH 44707
+
+</div>
+
+    <p>
+
+        <strong>
+        Property Serviced:
+        </strong>
+
+        ${property}
+
+    </p>
+
+    <p>
+
+        <strong>
+        Date:
+        </strong>
+
+        ${invoiceDate}
+
+    </p>
+
+</div>
+<label>
+
+Amount Due
+
+</label>
+
+<input
+    id="invoiceAmount"
+    type="number"
+    placeholder="Enter Amount">
+
+<h2>
+
+Services Completed
+
+</h2>
+<table>
+
+<tr>
+
+    <th>
+        Room
+    </th>
+
+    <th>
+        Report
+    </th>
+
+</tr>
+
+${tableRows}
+</table>
+
+<button
+    class="copyBtn"
+    onclick="copyInvoice('${property}')">
+
+    📋 Copy Invoice
+
+</button>
+
+<button
+    class="saveBtn"
+    onclick="saveInvoice('${property}')">
+
+    💾 Save Invoice
+
+</button>
+<button
+    class="saveBtn"
+    onclick="exportPDF('${property}')">
+
+    📄 Export PDF
+
+</button>
+
+`;
+}
+function copyInvoice(property) {
+const today = new Date();
+
+const invoiceDate =
+
+    String(
+        today.getMonth() + 1
+    ).padStart(
+        2,
+        "0"
+    ) +
+
+    "/" +
+
+    String(
+        today.getDate()
+    ).padStart(
+        2,
+        "0"
+    ) +
+
+    "/" +
+
+    today.getFullYear();
+
+    const amount =
+
+        document.getElementById(
+            "invoiceAmount"
+        ).value;
+
+    let invoiceText =
+
+        "ALL ABOUT THAT SPACE PROPERTY SERVICES\n\n" +
+
+        "INVOICE\n\n" +
+
+        "Property: " +
+        property +
+        "\n\n" +
+	"Date: " +
+	invoiceDate +
+	"\n\n"+
+	"Bill To: \n"+
+	"ClearSky Realty Inc. 202  49th St. S.E. Canton, Oh 44707"
+
+    const reports = [
+
+        localStorage.getItem(
+            property +
+            "_KitchenReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BathroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BedroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_HallwayReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_LivingRoomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_DiningRoomReport"
+        )
+
+    ];
+
+    reports.forEach(
+        report => {
+
+            if (report) {
+
+                invoiceText +=
+                    report +
+                    "\n";
+
+            }
+
+        }
+    );
+
+    const customRooms =
+
+        JSON.parse(
+            localStorage.getItem(
+                property +
+                "_CustomRoomReports"
+            )
+        ) || [];
+
+    customRooms.forEach(
+        room => {
+
+            invoiceText +=
+                room +
+                "\n";
+
+        }
+    );
+invoiceText +=
+
+    "\n\n" +
+
+    "================================\n\n" +
+
+    "AMOUNT DUE\n\n" +
+
+    "$" +
+    amount;
+
+
+    navigator.clipboard.writeText(
+        invoiceText
+    );
+
+   
+}
+function saveInvoice(property) {
+
+    const today = new Date();
+
+    const month =
+        String(
+            today.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const day =
+        String(
+            today.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
+
+    const year =
+        today.getFullYear();
+
+    const invoiceName =
+
+        month +
+        "_" +
+        day +
+        "_" +
+        year +
+        "_" +
+
+        property.replaceAll(
+            " ",
+            "_"
+        );
+
+    const amount =
+
+        document.getElementById(
+            "invoiceAmount"
+        ).value;
+
+    let invoiceText =
+
+        "ALL ABOUT THAT SPACE PROPERTY SERVICES\n\n" +
+
+        "INVOICE\n\n" +
+
+        "Property: " +
+        property +
+        "\n\n" +
+
+        "Date: " +
+        month +
+        "/" +
+        day +
+        "/" +
+        year +
+        "\n\n";
+    const reports = [
+
+        localStorage.getItem(
+            property +
+            "_KitchenReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BathroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_BedroomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_HallwayReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_LivingRoomReport"
+        ),
+
+        localStorage.getItem(
+            property +
+            "_DiningRoomReport"
+        )
+
+    ];
+
+    reports.forEach(
+        report => {
+
+            if (report) {
+
+                invoiceText +=
+                    report +
+                    "\n";
+
+            }
+
+        }
+    );
+
+    const customRooms =
+
+        JSON.parse(
+            localStorage.getItem(
+                property +
+                "_CustomRoomReports"
+            )
+        ) || [];
+
+    customRooms.forEach(
+        room => {
+
+            invoiceText +=
+                room +
+                "\n";
+
+        }
+    );
+invoiceText +=
+
+    "\n\n" +
+
+    "================================\n\n" +
+
+    "AMOUNT DUE\n\n" +
+
+    "$" +
+    amount;
+let invoices =
+
+    JSON.parse(
+        localStorage.getItem(
+            "Invoices"
+        )
+    ) || [];
+
+invoices.push({
+
+    name: invoiceName,
+
+    invoice: invoiceText,
+
+    amount: amount
+
+});
+localStorage.setItem(
+
+    "Invoices",
+
+    JSON.stringify(
+        invoices
+    )
+
+);
+
+alert(
+    "Invoice Saved!"
+);
+}
+function loadInvoices() {
+
+    const invoices =
+
+        JSON.parse(
+            localStorage.getItem(
+                "Invoices"
+            )
+        ) || [];
+
+    document.getElementById(
+        "invoiceHistory"
+    ).innerHTML =
+
+        invoices.length
+
+        ?
+
+       invoices.map(
+    (invoice, index) =>
+
+    `<div
+        class="property">
+
+        <div
+            onclick="openInvoice(${index})"
+            style="cursor:pointer;">
+
+            📄 ${invoice.name}
+
+        </div>
+
+        <button
+            style="
+                margin-top:10px;
+                background:#c62828;
+                color:white;
+            "
+            onclick="deleteInvoice(${index})">
+
+            🗑 Delete
+
+        </button>
+
+    </div>`
+)
+
+        .join("")
+
+        :
+
+        "No Saved Invoices";
+
+}
+function openInvoice(index) {
+
+    const invoices =
+
+        JSON.parse(
+            localStorage.getItem(
+                "Invoices"
+            )
+        ) || [];
+
+    const invoice =
+        invoices[index];
+
+    document.getElementById(
+    "invoiceDetails"
+).innerHTML =
+
+`
+<h2>
+
+${invoice.name}
+
+</h2>
+
+<h3>
+
+Amount Due: $${invoice.amount || "0.00"}
+
+</h3>
+
+<pre>
+
+${invoice.invoice}
+
+</pre>
+`;
+}
+function deleteInvoice(index) {
+
+    const confirmed =
+
+        confirm(
+            "Delete this invoice?"
+        );
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+    let invoices =
+
+        JSON.parse(
+            localStorage.getItem(
+                "Invoices"
+            )
+        ) || [];
+
+    invoices.splice(
+        index,
+        1
+    );
+
+    localStorage.setItem(
+
+        "Invoices",
+
+        JSON.stringify(
+            invoices
+        )
+
+    );
+
+    loadInvoices();
+
+    alert(
+        "Invoice deleted."
+    );
+
+}
+async function exportPDF(property) {
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF();
+
+    const amount =
+        document.getElementById(
+            "invoiceAmount"
+        ).value || "0.00";
+
+    const invoiceNumber =
+        localStorage.getItem(
+            "NextInvoiceNumber"
+        ) || 1001;
+
+    pdf.setFontSize(22);
+
+    pdf.text(
+        "ALL ABOUT THAT SPACE",
+        105,
+        15,
+        { align: "center" }
+    );
+
+    pdf.setFontSize(14);
+
+    pdf.text(
+        "PROPERTY SERVICES",
+        105,
+        23,
+        { align: "center" }
+    );
+
+    pdf.setFontSize(12);
+
+    pdf.text(
+        "Invoice #: " + invoiceNumber,
+        15,
+        35
+    );
+
+    pdf.text(
+        "Date: " +
+        new Date().toLocaleDateString(),
+        140,
+        35
+    );
+
+    pdf.text(
+        "Bill To:",
+        15,
+        50
+    );
+
+    pdf.text(
+        "ClearSky Realty Inc.",
+        15,
+        58
+    );
+
+    pdf.text(
+        "202 49th St. S.E.",
+        15,
+        66
+    );
+
+    pdf.text(
+        "Canton, OH 44707",
+        15,
+        74
+    );
+
+    pdf.text(
+        "Property: " + property,
+        15,
+        90
+    );
+
+    pdf.setFillColor(
+        22,
+        151,
+        201
+    );
+
+    pdf.rect(
+        15,
+        100,
+        180,
+        10,
+        "F"
+    );
+
+    pdf.setTextColor(
+        255,
+        255,
+        255
+    );
+
+    pdf.text(
+        "Room",
+        20,
+        107
+    );
+
+    pdf.text(
+        "Notes",
+        60,
+        107
+    );
+
+    pdf.setTextColor(
+        0,
+        0,
+        0
+    );
+
+    let y = 120;
+
+    const customRooms =
+        JSON.parse(
+            localStorage.getItem(
+                property +
+                "_CustomRoomReports"
+            )
+        ) || [];
+
+    const rooms = [
+
+        [
+            "Kitchen",
+            localStorage.getItem(
+                property +
+                "_KitchenReport"
+            )
+        ],
+
+        [
+            "Bathroom",
+            localStorage.getItem(
+                property +
+                "_BathroomReport"
+            )
+        ],
+
+        [
+            "Bedroom",
+            localStorage.getItem(
+                property +
+                "_BedroomReport"
+            )
+        ],
+
+        [
+            "Hallway",
+            localStorage.getItem(
+                property +
+                "_HallwayReport"
+            )
+        ],
+
+        [
+            "Living Room",
+            localStorage.getItem(
+                property +
+                "_LivingRoomReport"
+            )
+        ],
+
+        [
+            "Dining Room",
+            localStorage.getItem(
+                property +
+                "_DiningRoomReport"
+            )
+        ]
+
+    ];
+
+    customRooms.forEach(room => {
+
+        const roomName =
+            room.split("\n")[0];
+
+        rooms.push([
+            roomName,
+            room
+        ]);
+
+    });
+
+    rooms.forEach(room => {
+
+        if (room[1]) {
+
+            const noteLines =
+                pdf.splitTextToSize(
+                    room[1].replace(/\n/g, " "),
+                    130
+                );
+
+            const rowHeight =
+                (noteLines.length * 6) + 10;
+
+            pdf.rect(
+                15,
+                y - 5,
+                35,
+                rowHeight
+            );
+
+            pdf.rect(
+                50,
+                y - 5,
+                145,
+                rowHeight
+            );
+
+            pdf.text(
+                room[0],
+                18,
+                y
+            );
+
+            pdf.text(
+                noteLines,
+                53,
+                y
+            );
+
+            y += rowHeight;
+
+            if (y > 250) {
+
+                pdf.addPage();
+
+                y = 20;
+
+            }
+
+        }
+
+    });
+
+    pdf.setFontSize(14);
+
+    pdf.text(
+        "Amount Due: $" + amount,
+        15,
+        y + 20
+    );
+
+    pdf.setFontSize(11);
+
+    pdf.text(
+        "Invoice Due Immediately",
+        105,
+        270,
+        { align: "center" }
+    );
+
+    pdf.text(
+        "Thank You For Your Business!",
+        105,
+        278,
+        { align: "center" }
+    );
+
+    pdf.save(
+        property.replaceAll(
+            " ",
+            "_"
+        ) +
+        "_Invoice.pdf"
+    );
+
+}
+</script>
+</body>
+</html>
